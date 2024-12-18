@@ -27,7 +27,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
 		defaultValues: {
 			firstName: "",
 			lastName: "",
-			address: "",
+			address1: "",
 			city: "",
 			state: "",
 			postalCode: "",
@@ -86,23 +86,49 @@ const AuthForm = ({ type }: AuthFormProps) => {
 						{type === "sign-up" && (
 							<>
 								<div className="flex gap-4">
-									<CustomInput form={form} name="firstName" label="First name :" placeholder="ex: John" />
-									<CustomInput form={form} name="lastName" label="Last name :" placeholder="ex: Doe" />
+									<CustomInput
+										form={form}
+										name="firstName"
+										label="First name :"
+										placeholder="ex: John"
+										autoComplete="given-name"
+									/>
+									<CustomInput
+										form={form}
+										name="lastName"
+										label="Last name :"
+										placeholder="ex: Doe"
+										autoComplete="family-name"
+									/>
 								</div>
 								<CustomInput
 									form={form}
-									name="address"
+									name="address1"
 									label="Address :"
 									placeholder="Enter your specific address"
+									autoComplete="street-address"
 								/>
-								<CustomInput form={form} name="city" label="City :" placeholder="Enter your city" />
+								<CustomInput
+									form={form}
+									name="city"
+									label="City :"
+									placeholder="Enter your city"
+									autoComplete="city"
+								/>
 								<div className="flex gap-4">
-									<CustomInput form={form} name="state" label="State :" placeholder="ex: NY" />
+									<CustomInput
+										form={form}
+										name="state"
+										label="State :"
+										placeholder="ex: NY"
+										autoComplete="country"
+									/>
 									<CustomInput
 										form={form}
 										name="postalCode"
 										label="Postal code :"
 										placeholder="ex: 11101"
+										autoComplete="postal-code"
 									/>
 								</div>
 								<div className="flex gap-4">
@@ -111,18 +137,26 @@ const AuthForm = ({ type }: AuthFormProps) => {
 										name="birthDate"
 										label="Date of birth :"
 										placeholder="yyyy-mm-dd"
+										autoComplete="bday"
 									/>
 									<CustomInput form={form} name="ssn" label="SSN :" placeholder="ex: 1234" />
 								</div>
 							</>
 						)}
-						<CustomInput form={form} name="email" label="Email :" placeholder="Enter your email" />
+						<CustomInput
+							form={form}
+							name="email"
+							label="Email :"
+							placeholder="Enter your email"
+							autoComplete="email"
+						/>
 						<CustomInput
 							form={form}
 							type="password"
 							name="password"
 							label="Password :"
 							placeholder="Enter your password"
+							autoComplete={type === "sign-in" ? "current-password" : "new-password"}
 						/>
 						<div className="flex flex-col gap-4">
 							<Button type="submit" className="form-btn" disabled={isLoading}>

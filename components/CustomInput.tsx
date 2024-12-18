@@ -11,9 +11,10 @@ interface CustomInputProp {
 	name: FieldPath<z.infer<typeof signUpAuthFormSchema>>;
 	placeholder: string;
 	label: string;
+	autoComplete?: string;
 }
 
-const CustomInput = ({ form, type = "text", name, placeholder, label }: CustomInputProp) => {
+const CustomInput = ({ form, type = "text", name, placeholder, label, autoComplete = "on" }: CustomInputProp) => {
 	return (
 		<FormField
 			control={form.control}
@@ -23,7 +24,14 @@ const CustomInput = ({ form, type = "text", name, placeholder, label }: CustomIn
 					<FormLabel className="form-label">{label}</FormLabel>
 					<div className="flex flex-col w-full">
 						<FormControl>
-							<Input type={type} placeholder={placeholder} className="Input-class" {...field}></Input>
+							<Input
+								id={name}
+								type={type}
+								placeholder={placeholder}
+								className="Input-class"
+								autoComplete={autoComplete}
+								{...field}
+							></Input>
 						</FormControl>
 						<FormMessage className="form-message mt-2" />
 					</div>
