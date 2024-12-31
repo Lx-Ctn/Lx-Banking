@@ -3,6 +3,7 @@
 import { Client, Account, Databases, Users } from "node-appwrite";
 import { cookies } from "next/headers";
 
+/** Get account data if session is open */
 export async function createSessionClient() {
 	const client = new Client()
 		.setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
