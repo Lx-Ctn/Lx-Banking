@@ -1,7 +1,7 @@
 "use server";
 
 import { createAdminClient, createSessionClient } from "../appwrite";
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import { cookies } from "next/headers";
 import { encryptId, extractCustomerIdFromUrl, parseStringify } from "../utils";
 import {
@@ -14,18 +14,35 @@ import { plaidClient } from "../plaid";
 import { revalidatePath } from "next/cache";
 import { addFundingSource, createDwollaCustomer } from "./dwolla.actions";
 
+/** Get user from database (not from session) */
+export const getUserInfo = async ({ userId }: getUserInfoProps) => {
+	try {
+		const { database } = await createAdminClient();
+		const users = await database.listDocuments(
+			process.env.APPWRITE_DATABASE_ID!,
+			process.env.APPWRITE_USER_COLLECTION_ID!,
+			[Query.equal("userId", [userId])]
+		);
+		return parseStringify(users.documents[0]);
+	} catch (error) {
+		console.error("An error occurred while getting the user:", error);
+	}
+};
+
 /** Log in account with AppWrite */
 export const signIn = async ({ email, password }: signInProps) => {
 	try {
 		const { account } = await createAdminClient();
-		const response = await account.createEmailPasswordSession(email, password);
-		cookies().set("appwrite-session", response.secret, {
+		const session = await account.createEmailPasswordSession(email, password);
+		cookies().set("appwrite-session", session.secret, {
 			path: "/",
 			httpOnly: true,
 			sameSite: "strict",
 			secure: true,
 		});
-		return parseStringify(response);
+
+		const user = await getUserInfo({ userId: session.userId });
+		return parseStringify(user);
 	} catch (error) {
 		console.log(error);
 	}
@@ -80,7 +97,9 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
 export const getLoggedInUser = async () => {
 	try {
 		const { account } = await createSessionClient();
-		const user = await account.get();
+		const session = await account.get();
+		const user = await getUserInfo({ userId: session.$id });
+
 		return parseStringify(user);
 	} catch (error) {
 		console.log(error);
@@ -126,7 +145,7 @@ export const createBankAccount = async ({
 	accountId,
 	accessToken,
 	fundingSourceUrl,
-	sharableId,
+	shareableId,
 }: createBankAccountProps) => {
 	try {
 		const { database } = await createAdminClient();
@@ -141,7 +160,7 @@ export const createBankAccount = async ({
 				accountId,
 				accessToken,
 				fundingSourceUrl,
-				sharableId,
+				shareableId,
 			}
 		);
 		return parseStringify(bankAccount);
@@ -186,7 +205,7 @@ export const exchangePublicToken = async ({ publicToken, user }: exchangePublicT
 			accountId: accountData.account_id,
 			accessToken: access_token,
 			fundingSourceUrl,
-			sharableId: encryptId(accountData.account_id),
+			shareableId: encryptId(accountData.account_id),
 		});
 
 		// Revalidate the path to reflect the changes with access the the bank account
@@ -195,5 +214,35 @@ export const exchangePublicToken = async ({ publicToken, user }: exchangePublicT
 		return parseStringify({ publicTokenExchange: "complete" });
 	} catch (error) {
 		console.error("An error occurred while creating exchanging token : ", error);
+	}
+};
+
+/** Get a array of banks for a specific user from plaid database */
+export const getBanks = async ({ userId }: getBanksProps) => {
+	try {
+		const { database } = await createAdminClient();
+		const banks = await database.listDocuments(
+			process.env.APPWRITE_DATABASE_ID!,
+			process.env.APPWRITE_BANK_COLLECTION_ID!,
+			[Query.equal("userId", [userId])]
+		);
+		return parseStringify(banks.documents);
+	} catch (error) {
+		console.error("An error occurred while getting the banks:", error);
+	}
+};
+
+/** Get a specific bank from plaid database */
+export const getBank = async ({ documentId }: getBankProps) => {
+	try {
+		const { database } = await createAdminClient();
+		const banks = await database.listDocuments(
+			process.env.APPWRITE_DATABASE_ID!,
+			process.env.APPWRITE_BANK_COLLECTION_ID!,
+			[Query.equal("$id", [documentId])]
+		);
+		return parseStringify(banks.documents[0]);
+	} catch (error) {
+		console.error("An error occurred while getting the bank:", error);
 	}
 };

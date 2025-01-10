@@ -123,7 +123,7 @@ export function countTransactionCategories(transactions: Transaction[]): Categor
 	let totalCount = 0;
 
 	// Iterate over each transaction
-	transactions &&
+	if (transactions)
 		transactions.forEach(transaction => {
 			// Extract the category from the transaction
 			const category = transaction.category;

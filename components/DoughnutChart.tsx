@@ -10,11 +10,11 @@ const DoughnutChart = ({ accounts }: DoughnutChartProps) => {
 		datasets: [
 			{
 				label: "Banks",
-				data: [2, 7, 4],
+				data: accounts.map(account => account.currentBalance),
 				backgroundColor: ["hsl(160 85% 50%)", "hsl(155 90% 45%)", "hsl(165 95% 40%)"],
 			},
 		],
-		labels: ["Bank 1", "Bank 2", "Bank 3"],
+		labels: accounts.map(account => account.name),
 	};
 	return <Doughnut data={data} options={{ cutout: "30%", plugins: { legend: { display: false } } }} />;
 };
