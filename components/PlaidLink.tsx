@@ -3,6 +3,7 @@ import { PlaidLinkOnSuccess, PlaidLinkOptions, usePlaidLink } from "react-plaid-
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { createLinkToken, exchangePublicToken } from "@/lib/actions/user.actions";
+import Image from "next/image";
 
 const PlaidLink = ({ user, variant /* dwollaCustomerId */ }: PlaidLinkProps) => {
 	const router = useRouter();
@@ -39,9 +40,23 @@ const PlaidLink = ({ user, variant /* dwollaCustomerId */ }: PlaidLinkProps) => 
 					Connect bank
 				</Button>
 			) : variant === "ghost" ? (
-				<Button className="plaidlink-ghost">Connect bank</Button>
+				<Button onClick={() => open()} className="plaidlink-ghost">
+					Connect bank
+				</Button>
 			) : (
-				<Button>Connect bank</Button>
+				<Button
+					onClick={() => open()}
+					className="plaidLink-default bg-blue-500 mt-5 mb-3 rounded-full pt-3 pb-3 h-[inherit]"
+				>
+					<Image
+						className="brightness-[3] invert-0"
+						src={"/icons/connect-bank.svg"}
+						width={24}
+						height={24}
+						alt="Connect bank"
+					/>
+					<p className="text-[16px] font-semibold text-white m-auto">Connect bank</p>
+				</Button>
 			)}
 		</>
 	);
