@@ -77,10 +77,9 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
 		const accountData = accountsResponse.data.accounts[0];
 
 		// get transfer transactions from appwrite
-		const transferTransactions = [];
-		/* const transferTransactionsData = await getTransactionsByBankId({ bankId: bank.$id });
+		const transferTransactionsData = await getTransactionsByBankId({ bankId: bank.$id });
 
-		const transferTransactions = transferTransactionsData.documents.map((transferData: Transaction) => ({
+		const transferTransactions = transferTransactionsData.documents.map((transferData: TransferTransaction) => ({
 			id: transferData.$id,
 			name: transferData.name!,
 			amount: transferData.amount!,
@@ -88,7 +87,7 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
 			paymentChannel: transferData.channel,
 			category: transferData.category,
 			type: transferData.senderBankId === bank.$id ? "debit" : "credit",
-		})); */
+		}));
 
 		// get institution info from plaid
 		const institution = await getInstitution({
@@ -145,7 +144,7 @@ export const getInstitution = async ({ institutionId }: getInstitutionProps) => 
 /** Get transactions */
 export const getTransactions = async ({ accessToken }: getTransactionsProps) => {
 	let hasMore = true;
-	let transactions: any = [];
+	let transactions: Transaction[] = [];
 
 	try {
 		// Iterate through each page of new transaction updates for item

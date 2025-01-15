@@ -197,4 +197,4 @@ export const authFormSchema = (type: string) =>
 		password: z.string().min(10),
 	});
 
-export const signUpAuthFormSchema = authFormSchema("sihn-up");
+export const signUpAuthFormSchema = authFormSchema("sign-up");

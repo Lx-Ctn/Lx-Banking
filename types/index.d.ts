@@ -65,7 +65,6 @@ declare type Account = {
 
 declare type Transaction = {
 	id: string;
-	$id: string;
 	name: string;
 	paymentChannel: string;
 	type: string;
@@ -74,12 +73,18 @@ declare type Transaction = {
 	pending: boolean;
 	category: string;
 	date: string;
-	image: string;
-	type: string;
+	image: string | null | undefined;
+};
+
+declare type TransferTransaction = {
+	$id: string;
+	name: string;
+	amount: string;
 	$createdAt: string;
 	channel: string;
+	category: string;
 	senderBankId: string;
-	receiverBankId: string;
+	//receiverBankId: string;
 };
 
 declare type Bank = {
@@ -189,7 +194,7 @@ declare interface AuthFormProps {
 
 declare interface BankDropdownProps {
 	accounts: Account[];
-	setValue?: UseFormSetValue<any>;
+	setValue?: UseFormSetValue<string>;
 	otherStyles?: string;
 }
 
