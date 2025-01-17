@@ -3,13 +3,13 @@ import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import Footer from "./Footer";
 import PlaidLink from "./PlaidLink";
 
 const SideBar = ({ user }: SiderbarProps) => {
 	const pathName = usePathname();
+	const searchParams = useSearchParams();
 	return (
 		<section className="sidebar">
 			<nav className="flex flex-col gap-4">
@@ -28,7 +28,7 @@ const SideBar = ({ user }: SiderbarProps) => {
 					return (
 						<Link
 							key={i}
-							href={link.route}
+							href={link.route + "?" + searchParams.toString()}
 							className={cn("sidebar-link", { "bg-bank-gradient": isLinkActive })}
 						>
 							<div className="relative flex gap-3">

@@ -28,7 +28,7 @@ const MyBanks = async () => {
 								<BankCard
 									key={account.id}
 									account={account}
-									userName={loggegInUser.firstName}
+									userName={`${loggegInUser.firstName} ${loggegInUser.lastName}`}
 									showBalance={true}
 								/>
 							))}
